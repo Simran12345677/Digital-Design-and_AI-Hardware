@@ -31,10 +31,3 @@ The system uses **One-Hot Encoding** for fast state transitions and low propagat
 
 ---
 
-## 📁 File Structure
-
-```text
-├── vending_machine_controller.v  # Design File (FSM logic)
-├── tb_vending_machine.v          # Testbench File (Simulation scenarios)
-├── waveform.png                  # Waveform Screenshot
-└── README.md                     # Project Documentation
