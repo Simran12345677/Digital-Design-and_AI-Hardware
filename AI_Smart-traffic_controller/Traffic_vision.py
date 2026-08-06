@@ -1,4 +1,4 @@
-Import cv2
+import cv2
 import serial
 import time
 import collections
