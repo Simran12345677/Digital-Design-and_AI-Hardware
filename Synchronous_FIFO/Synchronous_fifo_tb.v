@@ -16,8 +16,6 @@ module tb_fifo_sync;
     wire                  empty;
     wire                  full;
 
-    integer i;
-
     // DUT Instantiation
     fifo_sync #(
         .FIFO_DEPTH(FIFO_DEPTH),
@@ -50,13 +48,16 @@ module tb_fifo_sync;
     end
     endtask
 
-    // Task for Read Operation
-    task read_data();
+    // Task for Read Operation (self-checking: compares data_out to expected value)
+    task read_data(input [DATA_WIDTH-1:0] expected);
     begin
         @(posedge clk);
         cs = 1; we = 0; re = 1;
         @(posedge clk);
-        $display("[READ]  Time=%0t | Data Out=%0d", $time, data_out);
+        if (data_out == expected)
+            $display("[READ]  Time=%0t | Data Out=%0d | PASSED", $time, data_out);
+        else
+            $display("[READ]  Time=%0t | Data Out=%0d | FAILED (expected %0d)", $time, data_out, expected);
         re = 0; cs = 0;
     end
     endtask
@@ -79,33 +80,62 @@ module tb_fifo_sync;
         write_data(10);
         write_data(100);
         
-        read_data();
-        read_data();
-        read_data();
+        read_data(1);
+        read_data(10);
+        read_data(100);
 
-        // --- Scenario 2: Back-to-Back Continuous Write/Read ---
+        // --- Scenario 2: Back-to-Back Write/Read ---
         $display("\n--- SCENARIO 2: Back-to-Back Write/Read ---");
-        for (i = 0; i < FIFO_DEPTH; i = i + 1) begin
-            write_data(1 << i); // Fixed syntax line
-            read_data();
-        end
+        write_data(1);
+        read_data(1);
 
-        // --- Scenario 3: Full and Empty Flag Verification ---
-        $display("\n--- SCENARIO 3: Testing Full Flag ---");
-        for (i = 0; i < FIFO_DEPTH; i = i + 1) begin
-            write_data(i + 5);
-        end
-        
+        write_data(2);
+        read_data(2);
+
+        write_data(4);
+        read_data(4);
+
+        write_data(8);
+        read_data(8);
+
+        write_data(16);
+        read_data(16);
+
+        write_data(32);
+        read_data(32);
+
+        write_data(64);
+        read_data(64);
+
+        write_data(128);
+        read_data(128);
+
+        // --- Scenario 3: Full Flag Verification ---
+        $display("\n--- SCENARIO 3: Testing Full Flag (filling all 8 slots) ---");
+        write_data(5);
+        write_data(6);
+        write_data(7);
+        write_data(8);
+        write_data(9);
+        write_data(10);
+        write_data(11);
+        write_data(12); // FIFO is now full (8 out of 8 slots used)
+
         // Extra write to check if it rejects data when Full
         write_data(500); 
         
-        $display("\n--- Testing Empty Flag ---");
-        for (i = 0; i < FIFO_DEPTH; i = i + 1) begin
-            read_data();
-        end
-        
-        // Extra read to check empty condition
-        read_data();
+        $display("\n--- Testing Empty Flag (reading all 8 slots back) ---");
+        read_data(5);
+        read_data(6);
+        read_data(7);
+        read_data(8);
+        read_data(9);
+        read_data(10);
+        read_data(11);
+        read_data(12); // FIFO is now empty
+
+        // Extra read to check empty condition (no new data written, data_out should hold last value)
+        read_data(12);
 
         #50;
         $finish;
