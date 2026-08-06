@@ -10,4 +10,4 @@ This repository contains my digital circuit design and hardware verification pro
 
 ## Tools Used
 * **HDL:** Verilog
-* **Simulation & Verification:** ModelSim / Icarus Verilog / EDA Playground (Jo bhi aapne use kiya ho)
+* **Simulation & Verification:** ModelSim / Icarus Verilog / EDA Playground 
