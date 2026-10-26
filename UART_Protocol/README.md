@@ -13,12 +13,11 @@ The design is fully modular and features a testbench that loops serial data from
 * `tb.v`: The simulation testbench that applies reset conditions, injects 8-bit hex payloads (e.g., `8'h41`, `8'h55`), and monitors the reconstructed output data.
 
 ## RTL Schematic
-*(Upload your Vivado schematic as `schematic.png` to an `images` folder)*
-![UART RTL Schematic](images/schematic.png)
+<img width="960" height="540" alt="uart schematic" src="https://github.com/user-attachments/assets/06276c35-ac1e-44cf-af77-1a5afb4c1e0d" />
+
 
 ## Simulation Waveforms
-*(Upload your Vivado simulation waveform as `waveform.png` to an `images` folder)*
-![UART Waveform Output](images/waveform.png)
+<img width="746" height="338" alt="self checking" src="https://github.com/user-attachments/assets/e07aab11-7aaf-461e-9f20-4094fb39f827" />
 
 ## How to Run in Xilinx Vivado
 1. Create a new RTL Project in Vivado.
